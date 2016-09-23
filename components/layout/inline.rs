@@ -1476,12 +1476,15 @@ impl Flow for InlineFlow {
 
         // Assign block sizes for any inline-block descendants.
         let thread_id = self.base.thread_id;
+        let content_box = self.base.position;
         for kid in self.base.child_iter_mut() {
             if flow::base(kid).flags.contains(IS_ABSOLUTELY_POSITIONED) ||
                     flow::base(kid).flags.is_float() {
                 continue
             }
-            kid.assign_block_size_for_inorder_child_if_necessary(layout_context, thread_id);
+            kid.assign_block_size_for_inorder_child_if_necessary(layout_context,
+                                                                 thread_id,
+                                                                 content_box);
         }
 
         if self.contains_positioned_fragments() {
